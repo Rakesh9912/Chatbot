@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* Simple styles for the chat interface */
+        body { font-family: Arial, sans-serif; }
+        #chat { width: 300px; margin: 0 auto; }
+        #messages { border: 1px solid #ccc; height: 300px; overflow-y: scroll; }
+        #userInput { width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h2>Chatbot</h2>
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Type your message here...">
+        <button id="sendBtn">Send</button>
+    </div>
+    <script>
+        document.getElementById("sendBtn").onclick = function() {
+            var userInput = document.getElementById("userInput").value;
+            fetch("http://127.0.0.1:5000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("messages").innerHTML += "<p><strong>You:</strong> " + userInput + "</p>";
+                document.getElementById("messages").innerHTML += "<p><strong>Bot:</strong> " + data.response + "</p>";
+                document.getElementById("userInput").value = "";  // Clear input
+            });
+        };
+    </script>
+</body>
+</html>
